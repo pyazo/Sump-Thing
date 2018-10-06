@@ -29,14 +29,15 @@ bool isConnected = false;
 
 Outlet *outlets[4];
 
-void UpdateOutlets(uint8_t outletStateArr[])
+void UpdateOutlets(uint8_t outletStateArr [])
 {
 	Serial.printf("[On_Off]: %s\n", outletStateArr);
 
 	int loop = sizeof(outletStateArr) - 1;
 
 	while (loop >= 0) {
-		outlets[loop]->ChangeState((bool) outletStateArr[loop]);
+		outlets[loop]->ChangeState(outletStateArr[loop]);
+		loop--;
 	}
 }
 
@@ -62,14 +63,14 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 	case WStype_TEXT:
 		Serial.printf(" %s\n", payload);
 
-		if (length > 22)
+		if (length > 20)
 		{
 			jIndex = 0;
-			index = 22;
+			index = 20;
 
-			while (index <= 28)
+			while (index <= 26)
 			{
-				j[jIndex] = (bool) AsciiToNumber(payload[index]);
+				j[jIndex] = AsciiToNumber(payload[index]);
 				index += 2;
 				jIndex++;
 			}

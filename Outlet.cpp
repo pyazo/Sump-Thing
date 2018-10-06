@@ -26,8 +26,6 @@ void Outlet::TurnOn() {
 void Outlet::ChangeState(uint8_t newState) {
 	digitalWrite(pin, newState);
 
-	isOn = (bool) newState;
-
 	return;
 }
 
