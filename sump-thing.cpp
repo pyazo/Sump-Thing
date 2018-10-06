@@ -29,22 +29,20 @@ bool isConnected = false;
 
 Outlet *outlets[4];
 
-void UpdateOutlets(uint8_t outletStateArr [])
+void UpdateOutlets(int outletStateArr [])
 {
-	Serial.printf("[On_Off]: %s\n", outletStateArr);
-
-	int loop = sizeof(outletStateArr) - 1;
+	int loop = 3;
 
 	while (loop >= 0) {
-		outlets[loop]->ChangeState(outletStateArr[loop]);
+		outlets[loop]->changeState((uint8_t) outletStateArr[loop]);
 		loop--;
 	}
 }
 
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
-	char index;
-	char jIndex;
-	uint8_t j[4];
+	int index;
+	int jIndex;
+	int j [4];
 	switch (type) {
 	case WStype_DISCONNECTED:
 		Serial.printf("[WSc] Disconnected!\n");
@@ -63,14 +61,17 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 	case WStype_TEXT:
 		Serial.printf(" %s\n", payload);
 
-		if (length > 20)
+		if (length > 22)
 		{
 			jIndex = 0;
-			index = 20;
+			index = 22;
 
-			while (index <= 26)
+			while (index <= 28)
 			{
-				j[jIndex] = AsciiToNumber(payload[index]);
+				j[jIndex] = AsciiToNumber((uint8_t) payload[index]);
+
+				Serial.println(j[jIndex]);
+
 				index += 2;
 				jIndex++;
 			}
@@ -94,9 +95,9 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 void setup() {
 	
 	// Define our outlets here in the array
-	outlets[0] = new Outlet(0);
-	outlets[1] = new Outlet(4);
-	outlets[2] = new Outlet(2);
+	outlets[0] = new Outlet(4);
+	outlets[1] = new Outlet(2);
+	outlets[2] = new Outlet(0);
 	outlets[3] = new Outlet(5);
 
 

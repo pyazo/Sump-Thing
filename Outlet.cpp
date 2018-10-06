@@ -1,30 +1,42 @@
 ﻿#include <Arduino.h>
 #include <Outlet.h>
 
-Outlet::Outlet(unsigned char pin) {
-	pin = pin;
+Outlet::Outlet(uint8_t pin) 
+{
+	this->pin = pin;
 
 	pinMode(pin, OUTPUT);
 }
 
-void Outlet::TurnOff() {
-	digitalWrite(pin, 0);
-
+void Outlet::turnOff() 
+{
+	digitalWrite(pin, LOW);
+	Serial.println(pin);
 	isOn = false;
 
 	return;
 }
 
-void Outlet::TurnOn() {
-	digitalWrite(pin, 1);
-
+void Outlet::turnOn() {
+	digitalWrite(pin, HIGH);
+	Serial.println(pin);
 	isOn = true;
 
 	return;
 }
 
-void Outlet::ChangeState(uint8_t newState) {
-	digitalWrite(pin, newState);
+void Outlet::changeState(uint8_t newState) 
+{
+
+	if (newState == 1) {
+		turnOn();
+	}
+	else if(newState == 0) {
+		turnOff();
+	}
+	else {
+		Serial.println("wut");
+	}
 
 	return;
 }
