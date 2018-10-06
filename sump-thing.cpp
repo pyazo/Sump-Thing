@@ -1,27 +1,14 @@
-﻿/*
-* WebSocketClientSocketIO.ino
-*
-*  Created on: 06.06.2016
-*
-*/
-
-// External Libraries
-#include <Arduino.h>
+﻿#include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
 #include <WebSocketsClient.h>
 #include <Hash.h>
 
-
-// Our libraries
 #include <SumpThingHelpers.h>
 #include <Outlet.h>
 
 ESP8266WiFiMulti WiFiMulti;
 WebSocketsClient webSocket;
-
-#define MESSAGE_INTERVAL 30000
-#define HEARTBEAT_INTERVAL 25000
 
 uint64_t messageTimestamp = 0;
 uint64_t heartbeatTimestamp = 0;
@@ -45,12 +32,10 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 	int j [4];
 	switch (type) {
 	case WStype_DISCONNECTED:
-		Serial.printf("[WSc] Disconnected!\n");
 		isConnected = false;
 		break;
 	case WStype_CONNECTED:
 	{
-		Serial.printf("[WSc] Connected to url: %s\n", payload);
 		isConnected = true;
 
 		// send message to server when Connected
@@ -59,8 +44,6 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 	}
 	break;
 	case WStype_TEXT:
-		Serial.printf(" %s\n", payload);
-
 		if (length > 22)
 		{
 			jIndex = 0;
@@ -78,15 +61,6 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 
 			UpdateOutlets(j);
 		}
-		// send message to server
-		// webSocket.sendTXT("message here");
-		break;
-	case WStype_BIN:
-		Serial.printf("[WSc] get binary length: %u\n", length);
-		hexdump(payload, length);
-
-		// send data to server
-		// webSocket.sendBIN(payload, length);
 		break;
 	}
 
@@ -106,20 +80,17 @@ void setup() {
 	Serial.setDebugOutput(true);
 
 	for (uint8_t t = 4; t > 0; t--) {
-		Serial.printf("[SETUP] BOOT WAIT %d...\n", t);
 		Serial.flush();
 		delay(1000);
 	}
 
 	WiFiMulti.addAP("Porter's Wifi", "cope1234");
 
-	//WiFi.disconnect();
 	while (WiFiMulti.run() != WL_CONNECTED) {
 		delay(100);
 	}
 
 	webSocket.beginSocketIO("10.0.0.80", 4000);
-	//webSocket.setAuthorization("user", "Password"); // HTTP Basic Authorization
 	webSocket.onEvent(webSocketEvent);
 
 }
