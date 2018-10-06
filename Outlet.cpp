@@ -1,6 +1,7 @@
-﻿#include <Outlet.h>
+﻿#include <Arduino.h>
+#include <Outlet.h>
 
-Outlet::Outlet(uint8_t pin) {
+Outlet::Outlet(unsigned char pin) {
 	pin = pin;
 
 	pinMode(pin, OUTPUT);
@@ -22,10 +23,10 @@ void Outlet::TurnOn() {
 	return;
 }
 
-void Outlet::ChangeState(bool newState) {
+void Outlet::ChangeState(uint8_t newState) {
 	digitalWrite(pin, newState);
 
-	isOn = newState;
+	isOn = (bool) newState;
 
 	return;
 }

@@ -1,5 +1,7 @@
-﻿#define MESSAGE_INTERVAL 30000;
+﻿#include <Arduino.h>
+
+#define MESSAGE_INTERVAL 30000;
 
 int AsciiToNumber(char number) {
-	return (int)number - 48;
+	return (uint8_t)number - 48;
 }

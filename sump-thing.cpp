@@ -27,7 +27,7 @@ uint64_t messageTimestamp = 0;
 uint64_t heartbeatTimestamp = 0;
 bool isConnected = false;
 
-Outlet *outlets[];
+Outlet *outlets[4];
 
 void UpdateOutlets(uint8_t outletStateArr[])
 {
@@ -36,14 +36,14 @@ void UpdateOutlets(uint8_t outletStateArr[])
 	int loop = sizeof(outletStateArr) - 1;
 
 	while (loop >= 0) {
-		outlets[loop]->ChangeState(outletStateArr[loop]);
+		outlets[loop]->ChangeState((bool) outletStateArr[loop]);
 	}
 }
 
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 	char index;
 	char jIndex;
-	bool j[4];
+	uint8_t j[4];
 	switch (type) {
 	case WStype_DISCONNECTED:
 		Serial.printf("[WSc] Disconnected!\n");
@@ -69,7 +69,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 
 			while (index <= 28)
 			{
-				j[jIndex] = (bool)AsciiToNumber(payload[index]);
+				j[jIndex] = (bool) AsciiToNumber(payload[index]);
 				index += 2;
 				jIndex++;
 			}
