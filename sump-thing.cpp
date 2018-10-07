@@ -21,7 +21,7 @@ void UpdateOutlets(int outletStateArr [])
 	int loop = 3;
 
 	while (loop >= 0) {
-		outlets[loop]->changeState((uint8_t) outletStateArr[loop]);
+		outlets[loop]->toggle((uint8_t) outletStateArr[loop]);
 		loop--;
 	}
 }
@@ -69,10 +69,10 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 void setup() {
 	
 	// Define our outlets here in the array
-	outlets[0] = new Outlet(4);
-	outlets[1] = new Outlet(2);
-	outlets[2] = new Outlet(0);
-	outlets[3] = new Outlet(5);
+	outlets[0] = new Outlet(PIN_1);
+	outlets[1] = new Outlet(PIN_2);
+	outlets[2] = new Outlet(PIN_3);
+	outlets[3] = new Outlet(PIN_4);
 
 
 	Serial.begin(115200);

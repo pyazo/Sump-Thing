@@ -8,35 +8,15 @@ Outlet::Outlet(uint8_t pin)
 	pinMode(pin, OUTPUT);
 }
 
-void Outlet::turnOff() 
+void Outlet::toggle(uint8_t newState) 
 {
-	digitalWrite(pin, LOW);
-	Serial.println(pin);
-	isOn = false;
+	bool isOn = newState == 1 ? true : false;
 
-	return;
-}
+	int pull = isOn ? HIGH : LOW;
 
-void Outlet::turnOn() {
-	digitalWrite(pin, HIGH);
-	Serial.println(pin);
-	isOn = true;
+	digitalWrite(pin, pull);
 
-	return;
-}
-
-void Outlet::changeState(uint8_t newState) 
-{
-
-	if (newState == 1) {
-		turnOn();
-	}
-	else if(newState == 0) {
-		turnOff();
-	}
-	else {
-		Serial.println("wut");
-	}
+	this->isOn = isOn;
 
 	return;
 }
