@@ -1,7 +1,6 @@
 ﻿#include <Arduino.h>
 
 /* Socket.IO stuff */
-#define MESSAGE_INTERVAL 30000
 #define HEARTBEAT_INTERVAL 25000
 
 /* Define our default pins */

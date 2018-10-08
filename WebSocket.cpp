@@ -20,6 +20,16 @@ WebSocket::WebSocket()
 void WebSocket::loop()
 {
 	client.loop();
+
+	if (isConnected) {
+		uint64_t now = millis();
+
+		if ((now - heartbeatTimestamp) > HEARTBEAT_INTERVAL) {
+			heartbeatTimestamp = now;
+			// socket.io heartbeat message
+			client.sendTXT("2");
+		}
+	}
 }
 
 void WebSocket::eventHandler(WStype_t type, uint8_t * payload, size_t length)
@@ -32,32 +42,35 @@ void WebSocket::eventHandler(WStype_t type, uint8_t * payload, size_t length)
 		disconnect();
 		break;
 	case WStype_TEXT:
-		// Payload starts with 42 so we don't care about those.
-		int offset = 2;
-
-		char * json = new char[length + 6]();
-
-		string jsonCoersion = "{\"0\":";
-
-		strcpy(json, jsonCoersion.c_str());
-
-		int index = offset;
-
-		Serial.printf("%s\n", payload);
-
-		while (index <= length)
+		// Don't care about heartbeats
+		if (length > 3)
 		{
-			json[(index - offset) + 5] = (char) payload[index];
-			index++;
+			int offset = 2;
+
+			char * json = new char[length + 4]();
+
+			string jsonCoersion = "{\"0\":";
+
+			strcpy(json, jsonCoersion.c_str());
+
+			int index = offset;
+
+			Serial.printf("%s\n", payload);
+
+			while (index <= length)
+			{
+				json[(index - offset) + 5] = (char)payload[index];
+				index++;
+			}
+
+			json[length + 3] = *"}";
+
+			DynamicJsonBuffer jsonBuffer;
+
+			JsonObject& payloadJson = jsonBuffer.parseObject(json);
+
+			handleMessage(payloadJson);
 		}
-
-		json[length + 5] = *"}";
-
-		DynamicJsonBuffer jsonBuffer;
-
-		JsonObject& payloadJson = jsonBuffer.parseObject(json);
-
-		handleMessage(payloadJson);
 	}
 }
 
@@ -75,6 +88,14 @@ void WebSocket::connect()
 
 void WebSocket::handleMessage(JsonObject& payload)
 {
+	String command = payload["0"][0];
+
+	if (command == "outlet")
+	{
+		commandHandler.outlet(payload["0"][1]);
+	}
+
+	Serial.println(command);
 	payload.printTo(Serial);
 	return;
 }
