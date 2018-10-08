@@ -90,9 +90,11 @@ void WebSocket::handleMessage(JsonObject& payload)
 {
 	String command = payload["0"][0];
 
+	JsonObject& args = payload["0"][1];
+
 	if (command == "outlet")
 	{
-		commandHandler.outlet(payload["0"][1]);
+		commandHandler.outlet(args);
 	}
 
 	return;
