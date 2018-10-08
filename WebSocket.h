@@ -1,0 +1,19 @@
+#include <Arduino.h>
+#include <WebSocketsClient.h>
+#include <ArduinoJson.h>
+
+class WebSocket
+{
+public:
+	WebSocket();
+	WebSocketsClient client;
+	bool isConnected;
+	void loop();
+private:
+	char ip [10];
+	uint16_t port;
+	void eventHandler(WStype_t type, uint8_t * payload, size_t length);
+	void connect();
+	void disconnect();
+	void handleMessage(JsonObject& payload);
+};

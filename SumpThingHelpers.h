@@ -10,7 +10,7 @@
 #define PIN_3 0
 #define PIN_4 5
 
-/* Begin Helper Functions */
-int AsciiToNumber(uint8_t number) {
-	return ((int) number) - 48;
-}
+/* Define some WebSocket stuff */
+
+#define SERVER_IP "10.0.0.80"
+#define SERVER_PORT 4000

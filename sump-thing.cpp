@@ -4,11 +4,14 @@
 #include <WebSocketsClient.h>
 #include <Hash.h>
 
-#include <SumpThingHelpers.h>
-#include <Outlet.h>
+#include "SumpThingHelpers.h"
+#include "Outlet.h"
+#include "WebSocket.h"
 
 ESP8266WiFiMulti WiFiMulti;
 WebSocketsClient webSocket;
+WebSocket * socket;
+
 
 uint64_t messageTimestamp = 0;
 uint64_t heartbeatTimestamp = 0;
@@ -51,7 +54,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 
 			while (index <= 28)
 			{
-				j[jIndex] = AsciiToNumber((uint8_t) payload[index]);
+				j[jIndex] = payload[index];
 
 				Serial.println(j[jIndex]);
 
@@ -74,6 +77,7 @@ void setup() {
 	outlets[2] = new Outlet(PIN_3);
 	outlets[3] = new Outlet(PIN_4);
 
+	socket = new WebSocket();
 
 	Serial.begin(115200);
 
@@ -97,6 +101,7 @@ void setup() {
 
 void loop() {
 	webSocket.loop();
+	socket->loop();
 
 	if (isConnected) {
 

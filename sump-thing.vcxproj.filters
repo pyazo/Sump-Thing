@@ -21,6 +21,9 @@
     <ClCompile Include="Outlet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WebSocket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.sump-thing.vsarduino.h">
@@ -32,8 +35,16 @@
     <ClInclude Include="Outlet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="WebSocket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="sump-thing.ino" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="sump-thing.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
