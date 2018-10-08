@@ -95,7 +95,5 @@ void WebSocket::handleMessage(JsonObject& payload)
 		commandHandler.outlet(payload["0"][1]);
 	}
 
-	Serial.println(command);
-	payload.printTo(Serial);
 	return;
 }
