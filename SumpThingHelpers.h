@@ -4,8 +4,8 @@
 #define HEARTBEAT_INTERVAL 25000
 
 /* Define our default pins */
-#define PIN_1 4
-#define PIN_2 2
+#define PIN_1 2
+#define PIN_2 4
 #define PIN_3 0
 #define PIN_4 5
 

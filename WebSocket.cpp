@@ -70,6 +70,8 @@ void WebSocket::eventHandler(WStype_t type, uint8_t * payload, size_t length)
 			JsonObject& payloadJson = jsonBuffer.parseObject(json);
 
 			handleMessage(payloadJson);
+
+			jsonBuffer.clear();
 		}
 	}
 }
@@ -92,9 +94,13 @@ void WebSocket::handleMessage(JsonObject& payload)
 
 	JsonObject& args = payload["0"][1];
 
-	if (command == "outlet")
+	if (command == "UPDATE_OUTLET_BATCH")
 	{
-		commandHandler.outlet(args);
+		commandHandler.batchUpdate(args);
+	}
+	else if (command == "UPDATE_OUTLET")
+	{
+		commandHandler.update(args);
 	}
 
 	return;

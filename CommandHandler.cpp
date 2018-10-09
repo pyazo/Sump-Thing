@@ -9,14 +9,22 @@ CommandHandler::CommandHandler()
 	outlets[3] = new Outlet(PIN_4);
 }
 
-void CommandHandler::outlet(JsonObject& args)
+void CommandHandler::batchUpdate(JsonObject& args)
 {
 	int loop = 3;
 
 	args.printTo(Serial);
 
 	while (loop >= 0) {
-		outlets[loop]->toggle((uint8_t) args["power"][loop]);
+		outlets[loop]->changeState((uint8_t) args["state"][loop]);
 		loop--;
 	}
+}
+
+void CommandHandler::update(JsonObject& args)
+{
+	int outlet = args["outlet"];
+	int state = args["state"];
+
+	outlets[outlet]->changeState((uint8_t) state);
 }

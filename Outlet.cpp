@@ -9,7 +9,7 @@ Outlet::Outlet(uint8_t pin)
 	pinMode(pin, OUTPUT);
 }
 
-void Outlet::toggle(uint8_t newState) 
+void Outlet::changeState(uint8_t newState) 
 {
 	bool isOn = newState == 1 ? true : false;
 
