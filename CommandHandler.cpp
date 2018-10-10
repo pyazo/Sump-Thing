@@ -9,7 +9,7 @@ CommandHandler::CommandHandler()
 	outlets[3] = new Outlet(PIN_4);
 }
 
-void CommandHandler::batchUpdate(JsonObject& args)
+void CommandHandler::batchUpdateOutlets(JsonObject& args)
 {
 	int loop = 3;
 
@@ -21,7 +21,7 @@ void CommandHandler::batchUpdate(JsonObject& args)
 	}
 }
 
-void CommandHandler::update(JsonObject& args)
+void CommandHandler::updateOutlet(JsonObject& args)
 {
 	int outlet = args["outlet"];
 	int state = args["state"];

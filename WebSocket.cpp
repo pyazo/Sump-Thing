@@ -96,11 +96,11 @@ void WebSocket::handleMessage(JsonObject& payload)
 
 	if (command == "UPDATE_OUTLET_BATCH")
 	{
-		commandHandler.batchUpdate(args);
+		commandHandler.batchUpdateOutlets(args);
 	}
 	else if (command == "UPDATE_OUTLET")
 	{
-		commandHandler.update(args);
+		commandHandler.updateOutlet(args);
 	}
 
 	return;

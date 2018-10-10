@@ -6,8 +6,8 @@ class CommandHandler
 {
 public:
 	CommandHandler();
-	void batchUpdate(JsonObject& args);
-	void update(JsonObject& args);
+	void batchUpdateOutlets(JsonObject& args);
+	void updateOutlet(JsonObject& args);
 private:
 	Outlet * outlets [4];
 };
