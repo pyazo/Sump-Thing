@@ -109,12 +109,14 @@
   </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="CommandHandler.cpp" />
+    <ClCompile Include="NetworkConnector.cpp" />
     <ClCompile Include="Outlet.cpp" />
     <ClCompile Include="WebSocket.cpp" />
     <ClCompile Include="sump-thing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommandHandler.h" />
+    <ClInclude Include="NetworkConnector.h" />
     <ClInclude Include="Outlet.h" />
     <ClInclude Include="WebSocket.h" />
     <ClInclude Include="SumpThingHelpers.h" />

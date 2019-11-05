@@ -5,13 +5,16 @@
 #include <Hash.h>
 
 #include "WebSocket.h"
+#include "NetworkConnector.h";
 
 ESP8266WiFiMulti WiFiMulti;
 WebSocket * socket;
+NetworkConnector * connector;
 
 
 void setup() {
 	socket = new WebSocket();
+	connector = new NetworkConnector();
 
 	Serial.begin(115200);
 
@@ -22,14 +25,9 @@ void setup() {
 		delay(1000);
 	}
 
-	WiFiMulti.addAP("Porter's Wifi", "cope1234");
-
-	while (WiFiMulti.run() != WL_CONNECTED) {
-		delay(100);
-	}
-
 }
 
 void loop() {
 	socket->loop();
+	connector->loop();
 }
