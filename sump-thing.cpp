@@ -3,6 +3,7 @@
 #include <ESP8266WiFiMulti.h>
 #include <WebSocketsClient.h>
 #include <Hash.h>
+#include <FS.h>;
 
 #include "WebSocket.h"
 #include "NetworkConnector.h";
@@ -17,6 +18,8 @@ void setup() {
 	connector = new NetworkConnector();
 
 	Serial.begin(115200);
+
+	SPIFFS.begin();
 
 	Serial.setDebugOutput(true);
 

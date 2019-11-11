@@ -4,6 +4,7 @@
 #include "DNSServer.h";
 #include "ESP8266WebServer.h";
 #include "ESP8266mDNS.h";
+#include "FS.h";
 
 using namespace std;
 
@@ -41,7 +42,11 @@ void NetworkConnector::broadcastWiFi()
 
 void NetworkConnector::handleRoot()
 {
-	server.send(200, "text/plain", "Hello, world!");
+	File file = SPIFFS.open("/test.html", "r");
+
+	server.streamFile(file, "text/html");
+
+	file.close();
 }
 
 void NetworkConnector::handleNotFound()
