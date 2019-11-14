@@ -11,5 +11,7 @@ private:
 	char *password;
 	void broadcastWiFi();
 	static void handleRoot();
+	static void handleNetworks();
 	static void handleNotFound();
+	static String parseRSSI(int rssi);
 };
