@@ -7,11 +7,14 @@ public:
 	bool hasNetworkConnection;
 	void loop();
 private:
-	char *ssid;
-	char *password;
+	char *savedSSID;
+	char *savedPassword;
 	void broadcastWiFi();
 	static void handleRoot();
+	static void handleJS();
 	static void handleNetworks();
+	static void handleConnect();
 	static void handleNotFound();
+	static void handleStopWifi();
 	static String parseRSSI(int rssi);
 };

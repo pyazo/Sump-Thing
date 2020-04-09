@@ -4,6 +4,7 @@
 #include <WebSocketsClient.h>
 #include <Hash.h>
 #include <FS.h>;
+#include <EEPROM.h>;
 
 #include "WebSocket.h"
 #include "NetworkConnector.h";
@@ -18,6 +19,7 @@ void setup() {
 	connector = new NetworkConnector();
 
 	Serial.begin(115200);
+	EEPROM.begin(512);
 
 	SPIFFS.begin();
 
