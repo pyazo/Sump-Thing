@@ -7,9 +7,12 @@ public:
 	bool hasNetworkConnection;
 	void loop();
 private:
-	char *savedSSID;
-	char *savedPassword;
+	String broadcastedSSID;
+	String savedSSID;
+	String savedPassword;
+	void connectToWiFi();
 	void broadcastWiFi();
+	void readCredentials();
 	static void handleRoot();
 	static void handleJS();
 	static void handleNetworks();

@@ -15,21 +15,19 @@ NetworkConnector * connector;
 
 
 void setup() {
-	socket = new WebSocket();
-	connector = new NetworkConnector();
-
-	Serial.begin(115200);
-	EEPROM.begin(512);
+	Serial.begin(74880);
 
 	SPIFFS.begin();
 
 	Serial.setDebugOutput(true);
 
+	socket = new WebSocket();
+	connector = new NetworkConnector();
+
 	for (uint8_t t = 4; t > 0; t--) {
 		Serial.flush();
 		delay(1000);
 	}
-
 }
 
 void loop() {

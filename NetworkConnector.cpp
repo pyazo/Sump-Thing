@@ -12,18 +12,77 @@ using namespace std;
 ESP8266WebServer server(80);
 DNSServer dnsServer;
 
-char *broadcastedSSID;
+String broadcastedSSID;
+String savedSSID;
+String savedPassword;
 
 NetworkConnector::NetworkConnector()
 {
-	hasNetworkConnection = false;
+	broadcastedSSID = "Sump Thing";
 
-	if (!hasNetworkConnection)
+	readCredentials();
+
+	if (savedSSID.length() == 0)
 	{
-		broadcastedSSID = "Sump Thing";
 
 		broadcastWiFi();
 	}
+	else {
+		connectToWiFi();
+	}
+}
+
+void NetworkConnector::readCredentials()
+{
+	File ssidFile = SPIFFS.open("/ssid.txt", "r");
+
+	if (!ssidFile) {
+		Serial.println("Unable to locate saved WiFi credientials, starting WiFi...");
+		return;
+	}
+
+	while (ssidFile.available()) {
+		savedSSID += (char) ssidFile.read();
+	}
+
+	ssidFile.close();
+
+	File passwordFile = SPIFFS.open("/password.txt", "r");
+
+	while (passwordFile.available()) {
+		savedPassword += (char) passwordFile.read();
+	}
+
+	passwordFile.close();
+
+	return;
+}
+
+void NetworkConnector::connectToWiFi()
+{
+	WiFi.begin(savedSSID.c_str(), savedPassword.c_str());
+
+	int wifiTryCount = 1;
+
+	while (WiFi.status() != WL_CONNECTED) {
+		Serial.println("Connecting to " + savedSSID + "...");
+
+		if (WiFi.status() == WL_CONNECT_FAILED || wifiTryCount >= 60) {
+			Serial.println("Invalid saved WiFi credentials...");
+
+			savedSSID = "";
+			savedPassword = "";
+
+			broadcastWiFi();
+
+			return;
+		}
+
+		wifiTryCount += 1;
+		delay(1000);
+	}
+
+	Serial.println("Successfully connected to " + savedSSID + "!");
 }
 
 void NetworkConnector::broadcastWiFi()
@@ -33,7 +92,7 @@ void NetworkConnector::broadcastWiFi()
 
 	WiFi.mode(WIFI_AP);
 	WiFi.softAPConfig(localhost, localhost, IPAddress(255, 255, 255, 0));
-	WiFi.softAP(broadcastedSSID);
+	WiFi.softAP(broadcastedSSID.c_str());
 
 	dnsServer.start(DNS_PORT, "*", localhost);
 
@@ -46,6 +105,8 @@ void NetworkConnector::broadcastWiFi()
 	server.onNotFound(handleNotFound);
 
 	server.begin();
+
+	return;
 }
 
 void NetworkConnector::handleRoot()
@@ -126,10 +187,7 @@ void NetworkConnector::handleConnect()
 
 	Serial.println("Recieved ssid " + ssid + " and password " + password);
 
-	const char *ssidArr = ssid.c_str();
-	const char *passArr = password.c_str();
-
-	WiFi.begin(ssidArr, passArr);
+	WiFi.begin(ssid.c_str(), password.c_str());
 
 	int wifiTryCount = 1;
 
@@ -145,18 +203,29 @@ void NetworkConnector::handleConnect()
 		delay(1000);
 	}
 
+	File ssidFile = SPIFFS.open("/ssid.txt", "w");
+
+	if (ssidFile.print(ssid)) {
+		Serial.println("SSID file written.");
+	}
+	else {
+		Serial.println("Failed to write SSID file.");
+	}
+	ssidFile.close();
+
+	File passwordFile = SPIFFS.open("/password.txt", "w");
+
+	if (passwordFile.print(password)) {
+		Serial.println("Password file written.");
+	}
+	else {
+		Serial.println("Failed to write password file");
+	}
+
+	passwordFile.close();
+
 	server.sendHeader("Access-Control-Allow-Origin", "*");
 	server.send(200, "application/json", "{ \"connected\": true, \"uid\": \"" + WiFi.macAddress() + "\" }");
-
-	for (byte i = 0; i <= strlen(ssidArr); i++) {
-		EEPROM.write(i, ssidArr[i]);
-	}
-
-	for (byte i; i <= strlen(passArr); i++) {
-		EEPROM.write(32 + i, passArr[i]);
-	}
-
-	EEPROM.commit();
 }
 
 void NetworkConnector::handleNotFound()
@@ -171,12 +240,6 @@ void NetworkConnector::handleStopWifi()
 	server.stop();
 }
 
-void NetworkConnector::loop()
-{
-	dnsServer.processNextRequest();
-	server.handleClient();
-}
-
 // Values from here: http://www.veris.com/docs/whitePaper/vwp18_RSSI_RevA.pdf
 String NetworkConnector::parseRSSI(int rssi)
 {
@@ -184,4 +247,10 @@ String NetworkConnector::parseRSSI(int rssi)
 	if (rssi > -55 && rssi <= -40) return "3";
 	if (rssi > -70 && rssi <= -55) return "2";
 	if (rssi > -80 && rssi <= -70) return "1";
+}
+
+void NetworkConnector::loop()
+{
+	dnsServer.processNextRequest();
+	server.handleClient();
 }
